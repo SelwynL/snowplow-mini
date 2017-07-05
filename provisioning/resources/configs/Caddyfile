@@ -1,5 +1,13 @@
 localhost:2000 {
-        proxy / localhost:3000
+        basicauth "USERNAME_PLACEHOLDER" PASSWORD_PLACEHOLDER {
+             /spmini
+             /kibana
+             /elasticsearch
+             /controlplane
+        }
+        proxy /spmini localhost:3000 {
+            without /spmini
+        }
         proxy /collector localhost:8080 {
             without /collector
         }
