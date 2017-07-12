@@ -52,6 +52,21 @@ else
     exit 1
 fi
 
+## add external iglu server test
+cp $testEnv/orgConfig/iglu-resolver.json $testEnv/testConfig/.
+external_test_uuid=$(uuidgen)
+add_external_iglu_server_result=$(curl -s -o /dev/null -w "%{http_code}" -d "iglu_server_uri=testigluserveruri.com&iglu_server_apikey=$external_test_uuid" localhost:10000/addexternaligluserver)
+sleep 2
+written_apikey=$(diff $testEnv/testConfig/iglu-resolver.json $testEnv/expectedConfig/iglu-resolver-external-iglu.json | grep $external_test_uuid)
+
+if [[ "${add_external_iglu_server_result}" -eq 200 ]] && [[ "${written_apikey}" != "" ]];then
+    echo "Adding external Iglu Server is working correctly."
+else
+    echo "Adding external Iglu Server is not working correctly."
+    exit 1
+fi
+
+
 sudo cp $testInit/snowplow_mini_control_plane_api_original_init /etc/init.d/snowplow_mini_control_plane_api
 sudo /etc/init.d/snowplow_mini_control_plane_api restart 
 

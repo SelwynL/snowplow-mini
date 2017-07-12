@@ -22,29 +22,47 @@ import axios from 'axios';
 
 export class ControlPlane extends React.Component<{}, {}> {
 
-    public render() {
+  public render() {
 
-        return (
-          <div className="tab-content">
-            <p>Press the buttons for controlling the Snowplow-Mini without ssh:<br></br></p>
-            <h4>Restart all services:</h4>
-            <button type="button" title="Clear the cache for schemas" onClick={this.restartAllServices.bind(this) }>Restart all services</button>
-            <h4>Upload enrichments json file:</h4>
-            <form encType="multipart/form-data" action="/controlplane/uploadenrichments" method="post">
-                 <table>
-                  <tbody>
-                    <tr>
-                      <td><input type="file" name="enrichmentjson" /></td>
-                    </tr>
-                    <tr>
-                      <td><input type="submit" value="upload enrichment json file" /></td>
-                    </tr>
-                  </tbody>
-                </table>             
-            </form>
-          </div>
-        );
-    }
+    return (
+      <div className="tab-content">
+        <p>Press the buttons for controlling the Snowplow-Mini without ssh:<br></br></p>
+        <h4>Restart all services:</h4>
+        <button type="button" title="Clear the cache for schemas" onClick={this.restartAllServices.bind(this) }>Restart all services</button>
+        <h4>Upload enrichments json file:</h4>
+        <form encType="multipart/form-data" action="/controlplane/uploadenrichments" method="post">
+             <table>
+              <tbody>
+                <tr>
+                  <td><input type="file" name="enrichmentjson" /></td>
+                </tr>
+                <tr>
+                  <td><input type="submit" value="upload enrichment json file" /></td>
+                </tr>
+              </tbody>
+            </table>             
+        </form>
+        <h4>Add external Iglu Server:</h4>
+        <form action="/controlplane/addexternaligluserver" method="post">
+            <table>
+              <tbody>
+                <tr>
+                  <td>Iglu Server URI:  <input type="text" name="iglu_server_uri" /></td>
+                </tr>
+                <tr>
+                  <td>Iglu Server Apikey:  <input type="text" name="iglu_server_apikey" /></td>
+                </tr>
+                <tr>
+                  <td><input type="submit" value="add external iglu server" /></td>
+                </tr>
+              </tbody>
+            </table>            
+        </form>
+      </div>
+    );
+  }
+
+
 
   private restartAllServices(): void {
     alert("Restarting all services...")
