@@ -58,6 +58,19 @@ export class ControlPlane extends React.Component<{}, {}> {
               </tbody>
             </table>            
         </form>
+        <h4>Add super UUID for local Iglu Server:</h4>
+        <form action="/controlplane/addigluserversuperuuid" method="post">
+            <table>
+              <tbody>
+                <tr>
+                  <td>Iglu Server Super UUID:  <input type="text" name="iglu_server_super_uuid" /></td>
+                </tr>
+                <tr>
+                  <td><input type="submit" value="add UUID" /></td>
+                </tr>
+              </tbody>
+            </table>            
+        </form>
       </div>
     );
   }

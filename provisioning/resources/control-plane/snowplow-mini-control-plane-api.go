@@ -27,6 +27,7 @@ func main() {
 	http.HandleFunc("/restartspservices", restartSPServices)
     http.HandleFunc("/uploadenrichments", uploadEnrichments)
     http.HandleFunc("/addexternaligluserver", addExternalIgluServer)
+    http.HandleFunc("/addigluserversuperuuid", addIgluServerSuperUUID)
     log.Fatal(http.ListenAndServe(":10000", nil))
 }
 
@@ -101,6 +102,32 @@ func addExternalIgluServer(resp http.ResponseWriter, req *http.Request) {
             return
         }
         //restart SP services to get action the external iglu server 
+        _, err = callRestartSPServicesScript()
+        resp.WriteHeader(http.StatusOK)
+        if err != nil {
+            http.Error(resp, err.Error(), 400)
+            return
+        }
+        resp.WriteHeader(http.StatusOK)
+        io.WriteString(resp, "added successfully")
+    }
+}
+
+func addIgluServerSuperUUID(resp http.ResponseWriter, req *http.Request) {
+    if req.Method == "POST" {
+        req.ParseForm()
+        igluServerSuperUUID := req.Form["iglu_server_super_uuid"][0]
+
+        shellScriptCommand := []string{scriptsPath + "/" +  "add_iglu_server_super_uuid.sh", 
+                                       igluServerSuperUUID, 
+                                       configPath}
+        cmd := exec.Command("/bin/bash", shellScriptCommand...)
+        err := cmd.Run()
+        if err != nil {
+            http.Error(resp, err.Error(), 400)
+            return
+        }
+        //restart SP services 
         _, err = callRestartSPServicesScript()
         resp.WriteHeader(http.StatusOK)
         if err != nil {

@@ -67,6 +67,20 @@ else
 fi
 
 
+## add Iglu Server super uuid test
+cp $testEnv/orgConfig/iglu-resolver.json $testEnv/testConfig/.
+add_super_uuid_result=$(curl -s -o /dev/null -w "%{http_code}" -d "iglu_server_super_uuid=04577adf-6dce-49d7-8cbb-0ffdf83304de" localhost:10000/addigluserversuperuuid)
+sleep 2
+diff_test_expected=$(diff $testEnv/testConfig/iglu-resolver.json $testEnv/expectedConfig/iglu-resolver-add-super-uuid.json)
+
+if [[ "${add_super_uuid_result}" -eq 200 ]] && [[ "${diff_test_expected}" == "" ]];then
+    echo "Adding Iglu Server super uuid is working correctly."
+else
+    echo "Adding Iglu Server super uuid is not working correctly."
+    exit 1
+fi
+
+
 sudo cp $testInit/snowplow_mini_control_plane_api_original_init /etc/init.d/snowplow_mini_control_plane_api
 sudo /etc/init.d/snowplow_mini_control_plane_api restart 
 
