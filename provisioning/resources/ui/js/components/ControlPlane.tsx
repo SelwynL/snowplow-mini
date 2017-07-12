@@ -22,16 +22,29 @@ import axios from 'axios';
 
 export class ControlPlane extends React.Component<{}, {}> {
 
-  public render() {
-    return (
-      <div className="tab-content">
-        <p>Press the buttons for controlling the Snowplow-Mini without ssh:<br></br><br></br>
-          <button type="button" title="Clear the cache for schemas" onClick={this.restartAllServices.bind(this) }>Restart all services</button>
-          <br></br>
-        </p>
-      </div>
-    );
-  }
+    public render() {
+
+        return (
+          <div className="tab-content">
+            <p>Press the buttons for controlling the Snowplow-Mini without ssh:<br></br></p>
+            <h4>Restart all services:</h4>
+            <button type="button" title="Clear the cache for schemas" onClick={this.restartAllServices.bind(this) }>Restart all services</button>
+            <h4>Upload enrichments json file:</h4>
+            <form encType="multipart/form-data" action="/controlplane/uploadenrichments" method="post">
+                 <table>
+                  <tbody>
+                    <tr>
+                      <td><input type="file" name="enrichmentjson" /></td>
+                    </tr>
+                    <tr>
+                      <td><input type="submit" value="upload enrichment json file" /></td>
+                    </tr>
+                  </tbody>
+                </table>             
+            </form>
+          </div>
+        );
+    }
 
   private restartAllServices(): void {
     alert("Restarting all services...")

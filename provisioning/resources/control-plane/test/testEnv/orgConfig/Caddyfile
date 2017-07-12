@@ -1,0 +1,28 @@
+*:80 {
+        tls off
+        basicauth "USERNAME_PLACEHOLDER" PASSWORD_PLACEHOLDER {
+             /spmini
+             /kibana
+             /elasticsearch
+             /controlplane
+        }
+        proxy /spmini localhost:3000 {
+            without /spmini
+        }
+        proxy /collector localhost:8080 {
+            without /collector
+        }
+        proxy /kibana localhost:5601 {
+            without /kibana
+        }
+        proxy /iglu-server localhost:8081 {
+            without /iglu-server
+        }
+        proxy /api localhost:8081
+        proxy /elasticsearch localhost:9200 {
+            without /elasticsearch
+        }
+        proxy /controlplane localhost:10000 {
+            without /controlplane
+        }
+}

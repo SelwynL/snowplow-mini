@@ -10,7 +10,7 @@
 ### END INIT INFO
 
 dir="/home/ubuntu/snowplow/bin/"
-cmd="./snowplow-mini-control-plane-api -scriptsPath=/home/ubuntu/snowplow/scripts/snowplow-mini-control-plane-api-scripts"
+cmd="./snowplow-mini-control-plane-api -scriptsPath=/home/ubuntu/snowplow/scripts/snowplow-mini-control-plane-api-scripts -enrichmentsPath=/home/ubuntu/snowplow/configs/enrichments -configPath=/home/ubuntu/snowplow/configs"
 user="ubuntu"
 
 
