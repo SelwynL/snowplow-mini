@@ -29,6 +29,7 @@ func main() {
     http.HandleFunc("/addexternaligluserver", addExternalIgluServer)
     http.HandleFunc("/addigluserversuperuuid", addIgluServerSuperUUID)
     http.HandleFunc("/changeusernameandpassword", changeUsernameAndPassword)
+    http.HandleFunc("/adddomainname", addDomainName)
     log.Fatal(http.ListenAndServe(":10000", nil))
 }
 
@@ -168,3 +169,30 @@ func changeUsernameAndPassword(resp http.ResponseWriter, req *http.Request) {
     }
 }
 
+func addDomainName(resp http.ResponseWriter, req *http.Request) {
+    if req.Method == "POST" {
+        req.ParseForm()
+        tlsStatus := req.Form["tls_status"][0]
+        domainName := req.Form["domain_name"][0]
+
+        shellScriptCommand := []string{scriptsPath + "/" +  "write_domain_name_to_caddyfile.sh", 
+                                       tlsStatus, 
+                                       domainName,
+                                       configPath}
+        cmd := exec.Command("/bin/bash", shellScriptCommand...)
+        err := cmd.Run()
+        if err != nil {
+            http.Error(resp, err.Error(), 400)
+            return
+        }
+        //restart SP services 
+        _, err = callRestartSPServicesScript()
+        resp.WriteHeader(http.StatusOK)
+        if err != nil {
+            http.Error(resp, err.Error(), 400)
+            return
+        }
+        resp.WriteHeader(http.StatusOK)
+        io.WriteString(resp, "added successfully")
+    }
+}

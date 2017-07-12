@@ -93,6 +93,32 @@ else
     exit 1
 fi
 
+## Add domain name and tls on test
+cp $testEnv/orgConfig/Caddyfile $testEnv/testConfig/.
+add_domain_name_tls_on_result=$(curl -s -o /dev/null -w "%{http_code}" -d 'tls_status=on&domain_name=test.com' localhost:10000/adddomainname)
+sleep 2
+diff_test_expected=$(diff $testEnv/testConfig/Caddyfile $testEnv/expectedConfig/Caddyfile_add_domain_name_tls_on)
+
+if [[ "${add_domain_name_tls_on_result}" -eq 200 ]] && [[ "${diff_test_expected}" == "" ]];then
+    echo "Adding domain name with tls on is working correctly."
+else
+    echo "Adding domain name with tls on is not working correctly."
+    exit 1
+fi
+
+## Add domain name and tls off test
+cp $testEnv/orgConfig/Caddyfile $testEnv/testConfig/.
+add_domain_name_tls_off_result=$(curl -s -o /dev/null -w "%{http_code}" -d 'tls_status=off&domain_name=""' localhost:10000/adddomainname)
+sleep 2
+diff_test_expected=$(diff $testEnv/testConfig/Caddyfile $testEnv/expectedConfig/Caddyfile_add_domain_name_tls_off)
+
+if [[ "${add_domain_name_tls_off_result}" -eq 200 ]] && [[ "${diff_test_expected}" == "" ]];then
+    echo "Adding domain name with tls off is working correctly."
+else
+    echo "Adding domain name with tls off is not working correctly."
+    exit 1
+fi
+
 sudo cp $testInit/snowplow_mini_control_plane_api_original_init /etc/init.d/snowplow_mini_control_plane_api
 sudo /etc/init.d/snowplow_mini_control_plane_api restart 
 

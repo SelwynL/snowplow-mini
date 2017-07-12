@@ -91,6 +91,31 @@ export class ControlPlane extends React.Component<{}, {}> {
             Get back to previous page after submission and login with your new username and password.
          </p>
         
+        <h4>Add domain name for TLS:</h4>
+        <form action="/controlplane/adddomainname" method="post">
+            <table>
+              <tbody>
+                <tr>
+                  TLS Status:
+                </tr>
+                <tr>
+                  <td>
+                    on:  <input type="radio" name="tls_status" value="on" />
+                    off:  <input type="radio" name="tls_status" value="off" />
+                  </td>
+                </tr>
+                <tr>
+                  <td>Domain Name:  <input type="text" name="domain_name" /></td>
+                </tr>
+                <tr>
+                  <td><input type="submit" value="submit" /></td>
+                </tr>
+              </tbody>
+            </table>            
+        </form>
+         <p>NOTE: You will lose connection after change the username and password because of server restarting. 
+            Get back to previous page after submission.
+         </p>
       </div>
     );
   }

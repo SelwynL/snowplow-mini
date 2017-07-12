@@ -37,31 +37,6 @@
     cache_valid_time: 3600
   when: oracle_license_signed|changed
 
-- name: Install Git for go get
-  become: yes
-  apt:
-    name: git
-    state: present
-    update_cache: yes
-    cache_valid_time: 3600
-
-- name: Install GO 1.7
-  become: yes 
-  block:
-    - shell: "wget https://storage.googleapis.com/golang/go1.7.3.linux-amd64.tar.gz -P {{staging_dir}}"
-    - shell: "tar -C /usr/local -xzf {{staging_dir}}/go1.7.3.linux-amd64.tar.gz"
-    - file:
-        path: "~/go"
-        state: directory
-
-
-- name: Install dependencies of the Control API
-  become: yes 
-  environment:
-    PATH: "/usr/local/go/bin:/usr/bin/"
-    GOPATH: "/home/ubuntu/go"
-  shell: "go get github.com/emicklei/go-restful"
-
 - name: Copy Control API to executables dir
   become: yes
   synchronize: 
