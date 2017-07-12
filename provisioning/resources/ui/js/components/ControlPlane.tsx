@@ -71,6 +71,26 @@ export class ControlPlane extends React.Component<{}, {}> {
               </tbody>
             </table>            
         </form>
+        <h4>Change username and password for basic http authentication:</h4>
+        <form action="/controlplane/changeusernameandpassword" method="post">
+            <table>
+              <tbody>
+                <tr>
+                  <td>Username:  <input type="text" name="new_username" /></td>
+                </tr>
+                <tr>
+                  <td>Password:  <input type="text" name="new_password" /></td>
+                </tr>
+                <tr>
+                  <td><input type="submit" value="submit" /></td>
+                </tr>
+              </tbody>
+            </table>            
+        </form>
+         <p>NOTE: You will lose connection after change the username and password because of server restarting. 
+            Get back to previous page after submission and login with your new username and password.
+         </p>
+        
       </div>
     );
   }

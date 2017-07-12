@@ -28,6 +28,7 @@ func main() {
     http.HandleFunc("/uploadenrichments", uploadEnrichments)
     http.HandleFunc("/addexternaligluserver", addExternalIgluServer)
     http.HandleFunc("/addigluserversuperuuid", addIgluServerSuperUUID)
+    http.HandleFunc("/changeusernameandpassword", changeUsernameAndPassword)
     log.Fatal(http.ListenAndServe(":10000", nil))
 }
 
@@ -136,6 +137,34 @@ func addIgluServerSuperUUID(resp http.ResponseWriter, req *http.Request) {
         }
         resp.WriteHeader(http.StatusOK)
         io.WriteString(resp, "added successfully")
+    }
+}
+
+func changeUsernameAndPassword(resp http.ResponseWriter, req *http.Request) {
+    if req.Method == "POST" {
+        req.ParseForm()
+        newUsername := req.Form["new_username"][0]
+        newPassword := req.Form["new_password"][0]
+
+        shellScriptCommand := []string{scriptsPath + "/" +  "submit_username_password_for_basic_auth.sh",
+                                       newUsername, 
+                                       newPassword,
+                                       configPath}
+        cmd := exec.Command("/bin/bash", shellScriptCommand...)
+        err := cmd.Run()
+        if err != nil {
+            http.Error(resp, err.Error(), 400)
+            return
+        }
+        //restart SP services 
+        _, err = callRestartSPServicesScript()
+        resp.WriteHeader(http.StatusOK)
+        if err != nil {
+            http.Error(resp, err.Error(), 400)
+            return
+        }
+        resp.WriteHeader(http.StatusOK)
+        io.WriteString(resp, "changed successfully")
     }
 }
 
